@@ -89,4 +89,36 @@ public class BanQuanAoNam {
         cartservice.deleteById(id);
         return "/QuanAoNam/giohang/giohang";
     }
+
+    // User - Người dunng và đăng nhập
+    @GetMapping("/register")
+    public String showRegisterForm(Model model) {
+        model.addAttribute("user", new User());
+        return "register";
+    }
+
+    @PostMapping("/register")
+    public String processRegister(@ModelAttribute User user) {
+        userservice.register(user);
+        return "redirect:/login";
+    }
+
+    @GetMapping("/login")
+    public String showLoginForm() {
+        return "login";
+    }
+
+    @PostMapping("/login")
+    public String processLogin(@RequestParam String username,
+                               @RequestParam String password,
+                               Model model) {
+        User user = userservice.login(username, password);
+        if (user != null) {
+            model.addAttribute("user", user);
+            return "dashboard";
+        } else {
+            model.addAttribute("error", "Sai tài khoản hoặc mật khẩu!");
+            return "login";
+        }
+    }
 }
